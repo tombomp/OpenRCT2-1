@@ -1691,6 +1691,11 @@ static void CloseConstructWindowOnCompletion(Ride* ride)
             if (ride_are_all_possible_entrances_and_exits_built(ride))
             {
                 window_close(w);
+                if (gInputPlaceObjectModifier & PLACE_OBJECT_MODIFIER_REPEAT)
+                {
+                    RideSelection r{ ride->type, ride->subtype };
+                    ride_construct_new(r);
+                }
             }
             else
             {
