@@ -452,7 +452,7 @@ static ScreenCoordsXY _trackPlaceShiftStart;
 static int32_t _trackPlaceShiftZ;
 static int32_t _trackPlaceZ;
 static money32 _trackPlaceCost;
-static bool _autoOpeningShop;
+static bool _windowClosedOnce;
 static bool _autoRotatingShop;
 static uint8_t _currentlyShowingBrakeOrBoosterSpeed;
 static bool _boosterTrackSelected;
@@ -580,7 +580,7 @@ rct_window* window_ride_construction_open()
     _rideConstructionState = RIDE_CONSTRUCTION_STATE_PLACE;
     _currentTrackSelectionFlags = 0;
     _rideConstructionArrowPulseTime = 0;
-    _autoOpeningShop = false;
+    _windowClosedOnce = false;
     _autoRotatingShop = true;
     _trackPlaceCtrlState = false;
     _trackPlaceShiftState = false;
@@ -622,11 +622,11 @@ static void window_ride_construction_close(rct_window* w)
         {
             // HACK: Until we find a good a way to defer the game command for opening the shop, stop this
             //       from getting stuck in an infinite loop as opening the ride will try to close this window
-            if (!_autoOpeningShop)
+            if (!_windowClosedOnce)
             {
-                _autoOpeningShop = true;
+                _windowClosedOnce = true;
                 ride_set_status(ride, RIDE_STATUS_OPEN);
-                _autoOpeningShop = false;
+                _windowClosedOnce = false;
             }
         }
 
@@ -634,6 +634,17 @@ static void window_ride_construction_close(rct_window* w)
         auto intent = Intent(WC_RIDE);
         intent.putExtra(INTENT_EXTRA_RIDE_ID, ride->id);
         context_open_intent(&intent);
+        if (gInputPlaceObjectModifier & PLACE_OBJECT_MODIFIER_REPEAT)
+        {
+            // Constructing a new ride tries to close ride construction windows
+            // Without this there'd be an infinite loop
+            if (!_windowClosedOnce)
+            {
+                _windowClosedOnce = true;
+                ride_construct_new({ ride->type, ride->subtype });
+                _windowClosedOnce = false;
+            }
+        }
     }
     else
     {
@@ -1691,11 +1702,6 @@ static void CloseConstructWindowOnCompletion(Ride* ride)
             if (ride_are_all_possible_entrances_and_exits_built(ride))
             {
                 window_close(w);
-                if (gInputPlaceObjectModifier & PLACE_OBJECT_MODIFIER_REPEAT)
-                {
-                    RideSelection r{ ride->type, ride->subtype };
-                    ride_construct_new(r);
-                }
             }
             else
             {
