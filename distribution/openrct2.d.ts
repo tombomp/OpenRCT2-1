@@ -835,6 +835,9 @@ declare global {
         length: number;
         entrance: CoordsXYZD;
         exit: CoordsXYZD;
+        readonly height: number;
+        readonly segmentLength: number;
+        readonly segmentTime: number;
     }
 
     type EntityType =

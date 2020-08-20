@@ -75,6 +75,9 @@ namespace OpenRCT2::Scripting
             dukglue_register_property(ctx, &ScRideStation::length_get, &ScRideStation::length_set, "length");
             dukglue_register_property(ctx, &ScRideStation::entrance_get, &ScRideStation::entrance_set, "entrance");
             dukglue_register_property(ctx, &ScRideStation::exit_get, &ScRideStation::exit_set, "exit");
+            dukglue_register_property(ctx, &ScRideStation::height_get, nullptr, "height");
+            dukglue_register_property(ctx, &ScRideStation::segment_length_get, nullptr, "segmentLength");
+            dukglue_register_property(ctx, &ScRideStation::segment_time_get, nullptr, "segmentTime");
         }
 
     private:
@@ -158,6 +161,58 @@ namespace OpenRCT2::Scripting
             {
                 station->Exit = FromDuk<CoordsXYZD>(value);
             }
+        }
+
+        int32_t height_get() const
+        {
+            auto station = GetRideStation();
+            if (station != nullptr)
+            {
+                return station->Height;
+            }
+            return 0;
+        }
+
+        int32_t segment_length_get() const
+        {
+            auto station = GetRideStation();
+            if (station != nullptr)
+            {
+                return station->SegmentLength;
+            }
+            return 0;
+        }
+
+        int32_t segment_time_get() const
+        {
+            auto station = GetRideStation();
+            if (station != nullptr)
+            {
+                return station->SegmentTime;
+            }
+            return 0;
+        }
+
+        
+        int32_t queue_time_get() const
+        {
+            auto station = GetRideStation();
+            if (station != nullptr)
+            {
+                return station->QueueTime;
+            }
+            return 0;
+        }
+
+        
+        int32_t queue_length_get() const
+        {
+            auto station = GetRideStation();
+            if (station != nullptr)
+            {
+                return station->QueueLength;
+            }
+            return 0;
         }
 
         RideStation* GetRideStation() const
