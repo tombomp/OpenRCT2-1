@@ -78,6 +78,8 @@ namespace OpenRCT2::Scripting
             dukglue_register_property(ctx, &ScRideStation::height_get, nullptr, "height");
             dukglue_register_property(ctx, &ScRideStation::segment_length_get, nullptr, "segmentLength");
             dukglue_register_property(ctx, &ScRideStation::segment_time_get, nullptr, "segmentTime");
+            dukglue_register_property(ctx, &ScRideStation::queue_time_get, nullptr, "queueTime");
+            dukglue_register_property(ctx, &ScRideStation::queue_length_get, nullptr, "queueLength");
         }
 
     private:

@@ -838,6 +838,8 @@ declare global {
         readonly height: number;
         readonly segmentLength: number;
         readonly segmentTime: number;
+        readonly queueLength: number;
+        readonly queueTime: number;
     }
 
     type EntityType =
