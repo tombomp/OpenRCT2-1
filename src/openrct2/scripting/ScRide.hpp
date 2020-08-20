@@ -195,7 +195,6 @@ namespace OpenRCT2::Scripting
             return 0;
         }
 
-        
         int32_t queue_time_get() const
         {
             auto station = GetRideStation();
@@ -206,7 +205,6 @@ namespace OpenRCT2::Scripting
             return 0;
         }
 
-        
         int32_t queue_length_get() const
         {
             auto station = GetRideStation();
